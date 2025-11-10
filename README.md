@@ -1,11 +1,11 @@
-<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/4b33cbc7-9713-40df-b8ec-a40a4a2ec27a" /><div align="center">
+<div align="center">
 <h1>Quiz 3</h1>
   <p>
     Ingeniería Electrónica · Universidad Santo Tomás
     <br>
     <b>Didier Posse</b>
     <br>
-    <em>Primer Punto</em>
+    <em>Primer punto</em>
   </p>
 </div>
 

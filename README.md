@@ -22,7 +22,13 @@
       <p><img width=850 src="https://github.com/user-attachments/assets/93a3450b-6d07-472e-bd08-4d963e448ef2"/></p>
     </div>
     <p>
-      
+      Primero se debe crear la carpeta que contendrá todos los archivos necesarios para dockerizar la simulación. Una vez creada, se ingresa a la carpeta y se crea otra llamada <b>"results"</b>, la cual almacenará los datos obtenidos de la simulación.  
+      Luego, se crea el archivo <b>"Dockerfile"</b>, que contiene los comandos que indican todo lo que debe hacerse dentro del contenedor para descargar las dependencias y el repositorio que incluye los recursos necesarios para ejecutar la simulación, además de configurar el entorno de trabajo y las herramientas requeridas.
+      <br><br>
+      Después de eso, se usa el comando <code>xhost +local:docker</code> para permitir las conexiones X11, que son necesarias para mostrar el entorno gráfico al ejecutar el contenedor.  
+      Finalmente, se construye la imagen con:  
+      <code>docker build -t &lt;nombre_de_la_imagen&gt; .</code>  
+      Este proceso puede tardar varios minutos, y al finalizar debe aparecer el mensaje <b>"FINISHED"</b>.
     </p>
   </li>
 
@@ -31,7 +37,17 @@
       <p><img width=850 src="https://github.com/user-attachments/assets/1e646a3b-9cfc-4cce-8fb5-1fc908acc59a"/></p>
     </div>
     <p>
-      
+      En el archivo <b>Dockerfile</b>, cada línea cumple una función específica:
+      <ul>
+        <li><code>FROM ubuntu:22.04</code> → Define la imagen base del contenedor. En este caso, se usa <b>Ubuntu 22.04</b>, una versión estable y compatible con librerías gráficas y científicas necesarias para PyBullet.</li>
+        <li><code>ENV DEBIAN_FRONTEND=noninteractive</code> → Configura el entorno para que las instalaciones se ejecuten sin pedir confirmaciones, lo que permite automatizar todo el proceso dentro de Docker.</li>
+        <li><code>RUN apt-get update ...</code> → Actualiza los repositorios e instala los paquetes esenciales como <b>python3-pip</b>, <b>git</b>, <b>libgl1-mesa-glx</b> y <b>mesa-utils</b>. Estos paquetes permiten manejar librerías de Python, clonar repositorios y habilitar soporte gráfico (OpenGL) para la simulación. Al final, limpia la caché de <b>apt</b> para reducir el tamaño de la imagen.</li>
+        <li><code>WORKDIR /app</code> → Define la carpeta de trabajo dentro del contenedor, donde se ejecutarán los comandos y se almacenará el código del proyecto.</li>
+        <li><code>RUN git clone ...</code> → Clona el repositorio <b>PyBullet_Industrial_Robotics_Gym</b> directamente en la carpeta de trabajo, trayendo todo el contenido del proyecto al contenedor.</li>
+        <li><code>RUN pip3 install ...</code> → Instala las librerías necesarias como <b>PyBullet</b>, <b>NumPy</b>, <b>Pandas</b>, <b>Matplotlib</b>, <b>SciPy</b>, <b>Torch</b>, <b>Stable-Baselines3</b> y <b>Gymnasium</b>. Estas permiten realizar simulaciones físicas, cálculos matemáticos, aprendizaje por refuerzo y visualización de datos.</li>
+        <li><code>ENV PYTHONPATH=...</code> → Agrega la carpeta del proyecto al <b>PYTHONPATH</b> para que los módulos y scripts puedan importarse correctamente desde cualquier parte del código.</li>
+        <li><code>CMD ["python3", ...]</code> → Indica el comando que se ejecutará automáticamente al iniciar el contenedor. En este caso, se lanza el script principal del entorno de simulación (<b>test_env.py</b>), que ejecuta la prueba del entorno PyBullet.</li>
+      </ul>
     </p>
   </li>
 
@@ -40,7 +56,10 @@
       <p><img width=850 src="https://github.com/user-attachments/assets/c9b149dd-6dc4-4f07-b851-c73403df8ffb"/></p>
     </div>
     <p>
-      
+      En esta imagen se muestra la ejecución del contenedor con el comando:
+      <code>docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/dri &lt;nombre_de_la_imagen&gt;</code>  
+      Esto permite correr la simulación dentro de Docker, pero mostrando la interfaz gráfica igual que si se ejecutara directamente en el sistema.  
+      Aquí solo se muestra la ejecución de la simulación en la consola, donde se indican los datos que se pueden obtener, así como la información sobre mutex y semáforos durante la ejecución o finalización del proceso.
     </p>
   </li>
 
@@ -49,7 +68,7 @@
       <p><img width=850 src="https://github.com/user-attachments/assets/fb616716-6391-4997-b191-6cb44db54950"/></p>
     </div>
     <p>
-      
+      Aquí ya se evidencia la simulación corriendo desde Docker como un contenedor; así se confirma que efectivamente se dockerizó el archivo y que la interfaz gráfica, específicamente la de PyBullet, se muestra correctamente.
     </p>
   </li>
 </ol>
@@ -66,121 +85,52 @@
   <h2>Vigilancia Tecnológica</h2>
 </div>
 
-<ol>
+<h2>Quantum, Biological, Computer Vision and Neural Network Systems for the Industrial Internet of Things</h2>
+<p>
+  <b>Patente:</b> JP2024519533A<br>
+  <b>Año:</b> 2024<br>
+  <b>Entidad:</b> Varian Medical Systems Inc.<br><br>
+  La patente usa procesamiento de datos sensoriales y renderizado visual de gemelos digitales, lo que encaja con los trabajos de <b>visión artificial</b> y análisis de imágenes que hemos visto. También involucra <b>IoT</b> y <b>redes</b> porque usa sensores distribuidos que requieren comunicación mediante routers, switches y tecnologías como 5G o Wi-Fi.
+  El procesamiento pesado puede implementarse en <b>máquinas virtuales</b> o <b>contenedores Docker</b>, igual que en los laboratorios, para escalar y aislar servicios. Además, su gestión remota y el uso de blockchain la conectan con la <b>ciberseguridad</b> aplicada a sistemas distribuidos.
+  Finalmente, los nodos sensoriales y la necesidad de respuesta inmediata la vinculan con los <b>sistemas embebidos</b> y la <b>visión en tiempo real</b> que también hemos trabajado.
+</p>
 
-  <li><br>
-    <div align="center">
-      <p><img width=850 src="https://patentimages.storage.googleapis.com/b2/09/f7/eb6b69e5eb8e5b/JP2024519533A.png"/></p>
-    </div>
-    <p>
-      <b>Nombre de la patente:</b> Quantum robot system and control method  
-      <br><b>Número de publicación:</b> JP2024519533A  
-      <br><b>Año:</b> 2024  
-      <br><b>Entidad:</b> QunaSys Inc. (Japón)  
-      <br><br>
-      Esta patente propone un sistema de <b>robótica cuántica</b> donde la parte de decisión del robot no depende de un procesador clásico, sino de un <b>procesador cuántico</b> que calcula rutas, movimientos y decisiones en tiempo real.  
-      La arquitectura usa una red de comunicación segura entre el robot y el servidor cuántico, algo que se conecta con temas de <b>redes y ciberseguridad</b> vistos en clase, porque los datos deben viajar cifrados para evitar interferencias o ataques de red.  
-      <br><br>
-      Además, internamente el sistema usa una estructura digital híbrida: una capa de <b>procesamiento digital tradicional</b> (microcontroladores y sensores IoT) y otra cuántica que se comunica por canales de baja latencia.  
-      Esto refleja el enfoque de los <b>sistemas digitales</b> modernos donde se combinan procesadores clásicos con entornos virtuales o distribuidos, muy parecido a lo que hacemos cuando usamos <b>máquinas virtuales o contenedores Docker</b> que comparten información con otros sistemas.  
-      <br><br>
-      En conclusión, esta patente demuestra cómo la <b>robótica cuántica</b> ya está empezando a integrarse con <b>sistemas digitales distribuidos y redes IoT</b>, unificando control físico, comunicación segura y procesamiento avanzado.
-    </p>
-  </li>
+<h2>5G-WiFi Inside Secure Iris Biometrics’ Login</h2>
+<p>
+  <b>Patente:</b> US20220272084A1<br>
+  <b>Año:</b> 2022<br>
+  <b>Entidad:</b> Lenworth Alexander Hyatt<br><br>
+  Esta patente presenta un sistema de autenticación biométrica mediante el iris, que se conecta por 5G o WiFi para validar identidades de manera remota. Usa inteligencia artificial para reconocer patrones del iris y sustituir contraseñas tradicionales.  
+  En el contexto de <b>ciberseguridad</b> y <b>redes</b>, aplica directamente a lo que estamos viendo en clase: autenticación segura, comunicación entre dispositivos (IoT) y protección de datos en red. Además, su arquitectura puede ejecutarse en sistemas virtualizados o contenedores.  
+  En pocas palabras, combina visión artificial, IoT y seguridad digital, conceptos muy presentes en los sistemas digitales actuales.
+</p>
 
-  <li><br>
-    <div align="center">
-      <p><img width=850 src="https://patentimages.storage.googleapis.com/5b/13/b5/15e9e3de3a81c8/US20220272084A1.png"/></p>
-    </div>
-    <p>
-      <b>Nombre de la patente:</b> Quantum-enhanced robotic path optimization  
-      <br><b>Número de publicación:</b> US20220272084A1  
-      <br><b>Año:</b> 2022  
-      <br><b>Entidad:</b> IBM Corporation  
-      <br><br>
-      Esta invención trata de mejorar la forma en que los robots planean sus trayectorias usando algoritmos de <b>optimización cuántica</b>.  
-      Básicamente, el robot genera miles de posibles caminos simultáneamente (gracias a los qubits), y el sistema selecciona el óptimo en milisegundos.  
-      En la parte digital, usa un módulo de <b>control digital embebido</b> para traducir los resultados cuánticos a comandos que el robot pueda ejecutar, lo que implica una sincronización entre hardware y software similar a los <b>sistemas operativos en tiempo real</b> que hemos visto.  
-      <br><br>
-      También emplea una arquitectura distribuida tipo cliente-servidor, muy parecida a cómo funcionan los <b>chatbots o aplicaciones web</b> como las que hicimos en <b>Streamlit</b>, donde el procesamiento pesado se hace en la nube y el dispositivo local solo muestra el resultado.  
-      <br><br>
-      En relación con <b>redes y ciberseguridad</b>, la patente menciona el uso de canales cifrados y autenticación entre el módulo del robot y el procesador cuántico, reforzando la importancia de la seguridad en la comunicación entre sistemas.
-    </p>
-  </li>
+<h2>AI-Based Energy Edge Platform, Systems, and Methods Having a Robotic Process Automation System</h2>
+<p>
+  <b>Patente:</b> US12332621B2<br>
+  <b>Año:</b> 2025<br>
+  <b>Entidad:</b> Strong Force EE Portfolio 2022 LLC<br><br>
+  Esta patente plantea una plataforma de energía inteligente basada en IA, donde se usan sensores IoT para monitorear el consumo y robots de software (RPA) para automatizar procesos. Todo el sistema se gestiona en la <b>nube o en la “edge”</b>, es decir, de forma distribuida.  
+  Se conecta con los temas de <b>virtualización</b>, <b>Docker</b>, y <b>redes IoT</b> porque la arquitectura está pensada para funcionar en entornos distribuidos y seguros. Incluso tiene relación con <b>ciberseguridad</b> energética.  
+  Es un ejemplo claro de cómo la robótica y la IA se integran con sistemas digitales y automatización para mejorar la eficiencia energética.
+</p>
 
-  <li><br>
-    <div align="center">
-      <p><img width=850 src="https://patentimages.storage.googleapis.com/08/07/9d/eb6f208d3c8b5b/US12332621B2.png"/></p>
-    </div>
-    <p>
-      <b>Nombre de la patente:</b> Quantum control system for robotic actuators  
-      <br><b>Número de publicación:</b> US12332621B2  
-      <br><b>Año:</b> 2024  
-      <br><b>Entidad:</b> Google LLC  
-      <br><br>
-      Esta patente introduce un <b>sistema de control cuántico</b> para actuadores robóticos.  
-      Lo interesante es que los sensores del robot generan datos digitales que luego son procesados en un entorno cuántico para calcular ajustes en tiempo real con una precisión altísima.  
-      <br><br>
-      En términos de <b>sistemas digitales</b>, se trata de una integración de hardware digital, algoritmos cuánticos y software de control.  
-      El sistema usa <b>máquinas virtuales</b> para ejecutar las simulaciones del robot antes de enviar comandos físicos, lo que se relaciona con la virtualización y el uso de <b>contenedores Docker</b> para aislar entornos de prueba, igual a lo que vimos en clase.  
-      <br><br>
-      También aplica técnicas de <b>visión artificial</b> para verificar la posición de los actuadores y corregir desviaciones, algo que combina perfectamente la parte de sensores IoT con la analítica cuántica.  
-      De esta forma, la patente conecta la teoría de sistemas digitales con aplicaciones prácticas en robótica avanzada.
-    </p>
-  </li>
+<h2>Systems, Methods, Kits, and Apparatuses for Digital Product Network Systems and Biology-Based Value Chain Networks</h2>
+<p>
+  <b>Patente:</b> US20220245574A1<br>
+  <b>Año:</b> 2022<br>
+  <b>Entidad:</b> Strong Force VCN Portfolio 2019 LLC<br><br>
+  Esta patente está enfocada en crear redes de cadena de valor digital donde se integran robots, drones y manufactura aditiva (impresión 3D). Es como una red inteligente de producción automatizada donde los robots pueden comunicarse entre sí y coordinar tareas.  
+  En clase lo podemos asociar con <b>IoT</b> (robots interconectados), <b>ciberseguridad</b> (datos industriales protegidos), y <b>sistemas virtualizados</b> o basados en <b>Docker</b> (gestión de software en red).  
+  Este tipo de plataformas son clave para la industria 4.0 y la robótica conectada, usando entornos digitales seguros y escalables.
+</p>
 
-  <li><br>
-    <div align="center">
-      <p><img width=850 src="https://patentimages.storage.googleapis.com/fb/25/fd/7341f10b0a9b08/US20220245574A1.png"/></p>
-    </div>
-    <p>
-      <b>Nombre de la patente:</b> Hybrid quantum-classical system for robotic decision making  
-      <br><b>Número de publicación:</b> US20220245574A1  
-      <br><b>Año:</b> 2022  
-      <br><b>Entidad:</b> Microsoft Technology Licensing LLC  
-      <br><br>
-      Esta patente propone una combinación de <b>procesamiento clásico y cuántico</b> para la toma de decisiones en robots.  
-      Básicamente, el sistema evalúa los datos del entorno (visuales, térmicos, de distancia, etc.) con inteligencia artificial tradicional, pero envía las decisiones más complejas al módulo cuántico para resolverlas más rápido.  
-      <br><br>
-      Este esquema se asemeja mucho a los <b>sistemas distribuidos</b> o al uso de <b>microservicios</b> en entornos dockerizados, donde cada componente cumple una función específica y todos se comunican por una red interna.  
-      En clase lo vimos reflejado cuando usamos contenedores o servicios virtuales que se comunican entre sí dentro de una misma red.  
-      <br><br>
-      Además, este modelo podría funcionar con <b>IoT</b>, ya que permite conectar varios robots a un mismo servidor cuántico para compartir aprendizaje, lo que abre la puerta a una red de robots inteligentes conectados y seguros.
-    </p>
-  </li>
-
-  <li><br>
-    <div align="center">
-      <p><img width=850 src="https://patentimages.storage.googleapis.com/9b/d6/a4/24ab47d05998fa/CN109147880A.png"/></p>
-    </div>
-    <p>
-      <b>Nombre de la patente:</b> Quantum robot and cloud-based interaction system  
-      <br><b>Número de publicación:</b> CN109147880A  
-      <br><b>Año:</b> 2023  
-      <br><b>Entidad:</b> Huawei Technologies Co., Ltd.  
-      <br><br>
-      En esta patente, Huawei presenta un robot cuántico que se conecta directamente a una <b>plataforma en la nube</b> donde se ejecutan los algoritmos cuánticos de control y aprendizaje.  
-      El robot no necesita tener todo el procesamiento localmente, sino que funciona mediante una red IoT que comunica los sensores con la nube, parecida a una <b>infraestructura cliente-servidor</b>.  
-      <br><br>
-      Este modelo se parece a lo que hemos trabajado en clase con <b>Streamlit</b> o los <b>chatbots</b>, donde el procesamiento se realiza en servidores externos y la parte local solo muestra o envía datos.  
-      <br><br>
-      A nivel de <b>ciberseguridad</b>, la patente menciona autenticación cuántica para validar que las señales provienen del robot original, evitando ataques de red o suplantación de identidad.  
-      <br><br>
-      En general, esta invención combina los tres grandes ejes: <b>IoT, computación cuántica y sistemas digitales distribuidos</b>, aplicados directamente al campo de la robótica inteligente.
-    </p>
-  </li>
-
-  <li><br>
-    <div align="center">
-      <p><img width=850 src="https://github.com/user-attachments/assets/d8f8c6a0-quantumrobots-summary.png"/></p>
-    </div>
-    <p>
-      <b>Conclusión general:</b><br><br>
-      En conjunto, estas cinco patentes muestran cómo la <b>robótica moderna</b> está migrando hacia sistemas híbridos que combinan <b>procesamiento digital clásico</b> con <b>computación cuántica</b>, aprovechando la velocidad de los qubits para resolver problemas complejos.  
-      Todas incluyen componentes de <b>sistemas digitales</b> como virtualización, redes seguras, control embebido, visión artificial, y comunicación IoT, lo que demuestra que el futuro de la ingeniería electrónica y la computación va hacia la integración total de estas áreas.  
-      <br><br>
-      En resumen, la robótica cuántica no solo busca mejorar el rendimiento de los robots, sino también <b>redefinir la arquitectura de los sistemas digitales</b> donde todo está conectado: hardware, nube, redes, y seguridad cibernética.
-    </p>
-  </li>
-
-</ol>
+<h2>Management System and Method Based on Internet of Things Blockchain Quantum Bit Artificial Intelligence</h2>
+<p>
+  <b>Patente:</b> CN109147880A<br>
+  <b>Año:</b> 2019<br>
+  <b>Entidad:</b> Guangdong Boyun Public Platform Network Technology Co., Ltd.<br><br>
+  Esta patente combina <b>IoT</b>, <b>blockchain</b>, <b>computación cuántica</b> e <b>inteligencia artificial</b> para crear un sistema de gestión seguro y automatizado. Básicamente los dispositivos IoT envían información cifrada mediante blockchain, mientras la IA y los qubits procesan los datos.  
+  Se relaciona directamente con los temas de <b>redes</b> y <b>ciberseguridad</b>, ya que busca proteger la comunicación entre dispositivos distribuidos. Además, plantea una aplicación de computación cuántica dentro de los sistemas digitales modernos.  
+  Representa la evolución hacia redes inteligentes más seguras y autónomas.
+</p>
